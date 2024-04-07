@@ -22,7 +22,7 @@ bundle install
 5. Execute test
 ```shell
 ruby server.rb & bundle exec cucumber
-``
+```
 
 ## API
 ...

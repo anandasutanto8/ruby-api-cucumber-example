@@ -20,6 +20,3 @@ end
 AfterAll do
   terminate_server
 end
-
-# run with this command:
-# ruby server.rb & bundle exec cucumber

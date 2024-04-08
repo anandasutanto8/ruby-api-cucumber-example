@@ -25,7 +25,7 @@ ruby server.rb & bundle exec cucumber
 ```
 
 ## API
-API functionality is to create, read, update, and delete contact data that consist of name, address, and telephone. API to terminate server process is also available (see point number 7).
+API functionality in this repository is to create, read, update, and delete contact data that consist of name, address, and telephone. API to terminate server process is also available (see point number 7).
 
 1. `POST http://127.0.0.1:4567/addcontact` for adding new contact data
 ```

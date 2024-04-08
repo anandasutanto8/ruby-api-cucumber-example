@@ -1,6 +1,6 @@
 # ruby-api-cucumber-example
 
-A small example for implementing Cucumber BDD Framework for API testing using Ruby programming language.
+An example for implementing Cucumber BDD Framework for API testing using Ruby programming language.
 
 ## Prequisites
 1. Ruby programming language installed (notes: this repository developed with ruby 3.0.6)

@@ -54,8 +54,8 @@ Given('added contact data is') do |table|
     @request_body =
     {
       name: table.raw[i][0],
-      address: table.raw[i][0],
-      telephone: table.raw[i][0]
+      address: table.raw[i][1],
+      telephone: table.raw[i][2]
     }
     response = JSON.parse(HTTParty.post(@endpoint, headers: {'Content-Type' => 'application/json'}, body: JSON.generate(@request_body)).body)
     @arr_saved_id << JsonPath.on(response, "$.contact.id").to_s
@@ -72,6 +72,8 @@ When('request sent') do
     else
       response = HTTParty.get(@endpoint, headers: {'Content-Type' => 'application/json'}, query: @query_param)
     end
+  elsif @http_method == "PUT"
+    response = HTTParty.put(@endpoint, headers: {'Content-Type' => 'application/json'}, body: JSON.generate(@request_body), query: @query_param)
   elsif @http_method == "DELETE"
     response = HTTParty.delete(@endpoint, headers: {'Content-Type' => 'application/json'}, query: @query_param)
   end

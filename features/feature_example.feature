@@ -160,3 +160,51 @@ Feature: Contact API
     And key "$.count" value should be "0"
     And key "$.contact" should be existed
     And key "$.contact" value should be "[]"
+
+  Scenario Outline: Modify a contact data
+    Given added contact data is
+      | Name           | Address           | Telephone   |
+      | Sample Name 1  | Sample Address 1  | 02100010001 |
+    Given endpoint is "/update_contact_by_id"
+    And query param "id" value is "1"
+    And http method is "PUT"
+    And request body is at example "<Updated Name>" "<Updated Address>" "<Updated Telephone>"
+    When request sent
+    Then http status code should be "200"
+    And key "$.message" should be existed
+    And key "$.message" type should be "string"
+    And key "$.message" value should be "respective contact has been updated"
+    And key "$.previous_contact_information.id" value should be "1"
+    And key "$.previous_contact_information.name" value should be "Sample Name 1"
+    And key "$.previous_contact_information.address" value should be "Sample Address 1"
+    And key "$.previous_contact_information.telephone" value should be "02100010001"
+    And key "$.current_contact_information.name" value should be "<Updated Name>"
+    And key "$.current_contact_information.address" value should be "<Updated Address>"
+    And key "$.current_contact_information.telephone" value should be "<Updated Telephone>"
+    Examples:
+      | Updated Name          | Updated Address          | Updated Telephone |
+      | Updated Sample Name 1 | Updated Sample Address 1 | 081100001111      |
+
+  Scenario Outline: Check a modified contact data by id
+    Given added contact data is
+      | Name           | Address           | Telephone   |
+      | Sample Name 1  | Sample Address 1  | 02100010001 |
+    Given endpoint is "/update_contact_by_id"
+    And query param "id" value is "1"
+    And http method is "PUT"
+    And request body is at example "<Updated Name>" "<Updated Address>" "<Updated Telephone>"
+    When request sent
+    Then http status code should be "200"
+    Given endpoint is "/get_contact_by_id"
+    And query param "id" value is "1"
+    And http method is "GET"
+    When request sent
+    Then http status code should be "200"
+    And key "$.message" value should be "contact found"
+    And key "$.contact.id" value should be "1"
+    And key "$.contact.name" value should be "<Updated Name>"
+    And key "$.contact.address" value should be "<Updated Address>"
+    And key "$.contact.telephone" value should be "<Updated Telephone>"
+    Examples:
+      | Updated Name          | Updated Address          | Updated Telephone |
+      | Updated Sample Name 1 | Updated Sample Address 1 | 081100001111      |

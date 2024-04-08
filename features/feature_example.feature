@@ -208,3 +208,47 @@ Feature: Contact API
     Examples:
       | Updated Name          | Updated Address          | Updated Telephone |
       | Updated Sample Name 1 | Updated Sample Address 1 | 081100001111      |
+
+  Scenario: Error 400 returned when add contact key on request body is empty string
+    Given endpoint is "/add_contact"
+    And http method is "POST"
+    And used request body is
+    """
+    {
+      "name": "",
+      "address": "",
+      "telephone": ""
+    }
+    """
+    When request sent
+    Then http status code should be "400"
+    And key "$.message" value should be "failed to add new contact"
+    And key "$.error[0]" value should be "name should be in string format with 1-500 characters long"
+    And key "$.error[1]" value should be "address should be in string format with 2-500 characters long"
+    And key "$.error[2]" value should be "telephone should be in string format with 2-50 characters long"
+
+  Scenario: Error 404 returned when endpoint is invalid
+    Given endpoint is "/add_contact"
+    And http method is "GET"
+    When request sent
+    Then http status code should be "404"
+    And key "$.message" value should be "error found"
+    And key "$.error" value should be "please re-check http method and request url"
+
+  Scenario: Get contact by id is not found if id not existed
+    Given contact data is empty
+    Given endpoint is "/get_contact_by_id"
+    And query param "id" value is "1"
+    And http method is "GET"
+    When request sent
+    Then http status code should be "200"
+    And key "$.message" value should be "contact not found"
+
+  Scenario: Delete contact by id is not found if id not existed
+    Given contact data is empty
+    Given endpoint is "/delete_contact_by_id"
+    And query param "id" value is "1"
+    And http method is "DELETE"
+    When request sent
+    Then http status code should be "200"
+    And key "$.message" value should be "contact not found, there is no deleted contact"

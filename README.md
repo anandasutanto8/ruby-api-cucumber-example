@@ -23,6 +23,14 @@ bundle install
 ```shell
 ruby server.rb & bundle exec cucumber
 ```
+```shell
+# execute test scenario that has @positive tag:
+ruby server.rb & bundle exec cucumber --tags @positive
+```
+```shell
+# execute test scenario that has @negative tag:
+ruby server.rb & bundle exec cucumber --tags @negative
+```
 
 ## API
 API functionality in this repository is to create, read, update, and delete contact data that consist of name, address, and telephone. API to terminate server process is also available (see point number 7).

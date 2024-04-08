@@ -31,6 +31,10 @@ Given('request body is') do |string|
   @request_body = string
 end
 
+Given('used request body is') do |str|
+  @request_body = JSON.parse(str)
+end
+
 Given('request body is at example {string} {string} {string}') do |str_name, str_addr, str_tel|
   @request_body =
   {
@@ -60,6 +64,12 @@ Given('added contact data is') do |table|
     response = JSON.parse(HTTParty.post(@endpoint, headers: {'Content-Type' => 'application/json'}, body: JSON.generate(@request_body)).body)
     @arr_saved_id << JsonPath.on(response, "$.contact.id").to_s
   end
+end
+
+Given('contact data is empty') do
+  ### re-assign endpoint to delete all existing data
+  @endpoint = $base_url + '/delete_all_contact'
+  response = HTTParty.delete(@endpoint, headers: {'Content-Type' => 'application/json'})
 end
 
 When('request sent') do

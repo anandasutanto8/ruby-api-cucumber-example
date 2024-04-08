@@ -1,5 +1,6 @@
 Feature: Contact API
 
+  @positive @add-new-contact
   Scenario Outline: Add a new contact
     Given endpoint is "/add_contact"
     And http method is "POST"
@@ -40,6 +41,7 @@ Feature: Contact API
       | Sample Name 11 | Sample Address 11 | 081200001011 | 11 |
       | Sample Name 12 | Sample Address 12 | 081200001012 | 12 |
   
+  @positive @get-all-contact
   Scenario: Get all contact
     Given endpoint is "/get_all_contact"
     And http method is "GET"
@@ -61,6 +63,7 @@ Feature: Contact API
     And key "$..telephone" should be existed
     And key "$..telephone" type should be "string"
 
+  @positive @contact-by-id
   Scenario Outline: Get contact by id
     Given endpoint is "/get_contact_by_id"
     And query param "id" value is "<ID>"
@@ -89,6 +92,7 @@ Feature: Contact API
       | 6  | Sample Name 6  | Sample Address 6  | 081600001111 |
       | 12 | Sample Name 12 | Sample Address 12 | 081200001012 |
 
+  @positive @delete-contact-by-id-get-contact-by-id
   Scenario Outline: Delete contact by id with contact check (by id)
     Given endpoint is "/delete_contact_by_id"
     And query param "id" value is "<ID>"
@@ -125,6 +129,7 @@ Feature: Contact API
       | 11 | Sample Name 11 | Sample Address 11 | 081200001011 |
       | 5  | Sample Name 5  | Sample Address 5  | 081500001111 |
 
+  @positive @delete-contact-by-id-get-contact-all
   Scenario: Delete contact by id with contact check (all)
     Given added contact data is
       | Name           | Address           | Telephone    |
@@ -136,6 +141,7 @@ Feature: Contact API
     When "3" random contact deleted (by id)
     Then only "2" contact remained form get all contact API response
 
+  @positive @delete-all-contact
   Scenario: Delete all by id with contact check (all)
     Given added contact data is
       | Name           | Address           | Telephone    |
@@ -161,6 +167,7 @@ Feature: Contact API
     And key "$.contact" should be existed
     And key "$.contact" value should be "[]"
 
+  @positive @update-contact-by-id
   Scenario Outline: Modify a contact data
     Given added contact data is
       | Name           | Address           | Telephone   |
@@ -185,6 +192,7 @@ Feature: Contact API
       | Updated Name          | Updated Address          | Updated Telephone |
       | Updated Sample Name 1 | Updated Sample Address 1 | 081100001111      |
 
+  @positive @update-contact-by-id-get-contact-by-id
   Scenario Outline: Check a modified contact data by id
     Given added contact data is
       | Name           | Address           | Telephone   |
@@ -209,6 +217,7 @@ Feature: Contact API
       | Updated Name          | Updated Address          | Updated Telephone |
       | Updated Sample Name 1 | Updated Sample Address 1 | 081100001111      |
 
+  @negative @add-contact-error-400
   Scenario: Error 400 returned when add contact key on request body is empty string
     Given endpoint is "/add_contact"
     And http method is "POST"
@@ -227,6 +236,7 @@ Feature: Contact API
     And key "$.error[1]" value should be "address should be in string format with 2-500 characters long"
     And key "$.error[2]" value should be "telephone should be in string format with 2-50 characters long"
 
+  @negative @add-contact-error-404
   Scenario: Error 404 returned when endpoint is invalid
     Given endpoint is "/add_contact"
     And http method is "GET"
@@ -235,6 +245,7 @@ Feature: Contact API
     And key "$.message" value should be "error found"
     And key "$.error" value should be "please re-check http method and request url"
 
+  @negative @get-contact-by-id-not-found
   Scenario: Get contact by id is not found if id not existed
     Given contact data is empty
     Given endpoint is "/get_contact_by_id"
@@ -244,6 +255,7 @@ Feature: Contact API
     Then http status code should be "200"
     And key "$.message" value should be "contact not found"
 
+  @negative @delete-contact-by-id-not-found
   Scenario: Delete contact by id is not found if id not existed
     Given contact data is empty
     Given endpoint is "/delete_contact_by_id"

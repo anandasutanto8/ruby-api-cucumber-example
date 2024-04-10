@@ -1,10 +1,17 @@
 Feature: Contact API
 
-  @positive @add-new-contact
+  @new-test-1 @positive @add-new-contact
   Scenario Outline: Add a new contact
     Given endpoint is "/add_contact"
     And http method is "POST"
-    And request body is at example "<Name>" "<Address>" "<Telephone>"
+    And used request body is
+    """
+    {
+      "name": "<Name>",
+      "address": "<Address>",
+      "telephone": "<Telephone>"
+    }
+    """
     When request sent
     Then http status code should be "201"
     And key "$.message" should be existed
@@ -41,8 +48,15 @@ Feature: Contact API
       | Sample Name 11 | Sample Address 11 | 081200001011 | 11 |
       | Sample Name 12 | Sample Address 12 | 081200001012 | 12 |
   
-  @positive @get-all-contact
+  @new-test-1 @positive @get-all-contact
   Scenario: Get all contact
+    Given added contact data is
+      | Name           | Address           | Telephone    |
+      | Sample Name 1  | Sample Address 1  | 081100001111 |
+      | Sample Name 2  | Sample Address 2  | 081200001111 |
+      | Sample Name 3  | Sample Address 3  | 081300001111 |
+      | Sample Name 4  | Sample Address 4  | 081400001111 |
+      | Sample Name 5  | Sample Address 5  | 081500001111 |
     Given endpoint is "/get_all_contact"
     And http method is "GET"
     When request sent
@@ -53,44 +67,51 @@ Feature: Contact API
     And key "$.count" should be existed
     And key "$.count" type should be "integer"
     And key "$.contact" should be existed
-    And array of object item count on key "$.contact" should be equal with value on key "$.count"
+    And key "$.contact" type should be "array"
+    And array item count on key "$.contact" should be equal with value on key "$.count"
     And key "$..id" should be existed
     And key "$..id" type should be "integer"
+    And key "$..id" value should be same with all key "$.contact.id" value from saved body response from add new contact endpoint
     And key "$..name" should be existed
     And key "$..name" type should be "string"
+#    And key "$..name" value should be same with all key "$.contact.name" value from saved body response from add new contact endpoint
     And key "$..address" should be existed
     And key "$..address" type should be "string"
+#    And key "$..address" value should be same with all key "$.contact.address" value from saved body response from add new contact endpoint
     And key "$..telephone" should be existed
     And key "$..telephone" type should be "string"
+#    And key "$..telephone" value should be same with all key "$.contact.telephone" value from saved body response from add new contact endpoint
 
-  @positive @contact-by-id
+  @new-test-1 @positive @get-contact-by-id
   Scenario Outline: Get contact by id
+    Given added contact data is
+      | Name           | Address          | Telephone    |
+      | Sample Name 1  | Sample Address 1 | 081100001111 |
+      | Sample Name 2  | Sample Address 2 | 081200001111 |
+      | Sample Name 3  | Sample Address 3 | 081300001111 |
+      | Sample Name 4  | Sample Address 4 | 081400001111 |
+      | Sample Name 5  | Sample Address 5 | 081500001111 |
     Given endpoint is "/get_contact_by_id"
-    And query param "id" value is "<ID>"
+    And query param "id" value is from all key "$.contact.id" value from saved body response from add new contact endpoint
     And http method is "GET"
-    When request sent
-    Then http status code should be "200"
-    And key "$.message" should be existed
-    And key "$.message" type should be "string"
-    And key "$.message" value should be "contact found"
-    And key "$.contact" should be existed
-    And key "$.contact.id" should be existed
-    And key "$.contact.id" type should be "integer"
-    And key "$.contact.id" value should be "<ID>"
-    And key "$.contact.name" should be existed
-    And key "$.contact.name" type should be "string"
-    And key "$.contact.name" value should be "<Name>"
-    And key "$.contact.address" should be existed
-    And key "$.contact.address" type should be "string"
-    And key "$.contact.address" value should be "<Address>"
-    And key "$.contact.telephone" should be existed
-    And key "$.contact.telephone" type should be "string"
-    And key "$.contact.telephone" value should be "<Telephone>"
-    Examples:
-      | ID | Name           | Address           | Telephone    |
-      | 1  | Sample Name 1  | Sample Address 1  | 081100001111 |
-      | 6  | Sample Name 6  | Sample Address 6  | 081600001111 |
-      | 12 | Sample Name 12 | Sample Address 12 | 081200001012 |
+    When multiple request sent
+    Then all http status code (from multiple request) should be "200"
+    And all key "$.message" (from multiple request) should be existed
+    And all key "$.message" (from multiple request) type should be "string"
+    And all key "$.message" (from multiple request) value should be "contact found"
+    And all key "$.contact" (from multiple request) should be existed
+    And all key "$.contact.id" (from multiple request) should be existed
+    And all key "$.contact.id" (from multiple request) type should be "integer"
+    And all key "$.contact.id" (from multiple request) value should be same with all key "$.contact.id" value from saved body response from add new contact endpoint
+    And all key "$.contact.name" (from multiple request) should be existed
+    And all key "$.contact.name" (from multiple request) type should be "string"
+    And all key "$.contact.id" (from multiple request) value should be same with all key "$.contact.name" value from saved body response from add new contact endpoint
+    And all key "$.contact.address" (from multiple request) should be existed
+    And all key "$.contact.address" (from multiple request) type should be "string"
+    And all key "$.contact.id" (from multiple request) value should be same with all key "$.contact.address" value from saved body response from add new contact endpoint
+    And all key "$.contact.telephone" (from multiple request) should be existed
+    And all key "$.contact.telephone" (from multiple request) type should be "string"
+    And all key "$.contact.id" (from multiple request) value should be same with all key "$.contact.telephone" value from saved body response from add new contact endpoint
 
   @positive @delete-contact-by-id-get-contact-by-id
   Scenario Outline: Delete contact by id with contact check (by id)

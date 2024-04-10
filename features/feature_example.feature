@@ -74,13 +74,13 @@ Feature: Contact API
     And key "$..id" value should be same with all key "$.contact.id" value from saved body response from add new contact endpoint
     And key "$..name" should be existed
     And key "$..name" type should be "string"
-#    And key "$..name" value should be same with all key "$.contact.name" value from saved body response from add new contact endpoint
+    And key "$..name" value should be same with all key "$.contact.name" value from saved body response from add new contact endpoint
     And key "$..address" should be existed
     And key "$..address" type should be "string"
-#    And key "$..address" value should be same with all key "$.contact.address" value from saved body response from add new contact endpoint
+    And key "$..address" value should be same with all key "$.contact.address" value from saved body response from add new contact endpoint
     And key "$..telephone" should be existed
     And key "$..telephone" type should be "string"
-#    And key "$..telephone" value should be same with all key "$.contact.telephone" value from saved body response from add new contact endpoint
+    And key "$..telephone" value should be same with all key "$.contact.telephone" value from saved body response from add new contact endpoint
 
   @new-test-1 @positive @get-contact-by-id
   Scenario Outline: Get contact by id
